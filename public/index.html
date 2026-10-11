@@ -197,6 +197,21 @@
     .btn-note { width: 100%; margin: 0; font-size: .85rem; color: var(--ink-soft); }
     .btn-note a { color: inherit; }
 
+    /* Install instructions (iOS has no install prompt, so we explain the steps) */
+    dialog.sheet {
+      width: min(92vw, 380px);
+      padding: 22px 24px;
+      border: 2px solid var(--pea);
+      border-radius: 22px;
+      background: var(--paper, Canvas);
+      color: var(--ink);
+    }
+    dialog.sheet::backdrop { background: rgba(0, 0, 0, .45); }
+    dialog.sheet h2 { margin: 0 0 10px; font-size: 1.15rem; }
+    dialog.sheet ol { margin: 0 0 16px; padding-left: 1.3em; }
+    dialog.sheet li { margin: 6px 0; }
+    dialog.sheet svg { width: 1.1em; height: 1.1em; vertical-align: -0.15em; }
+
     footer {
       padding: 28px 24px 36px;
       font-size: .85rem;
@@ -263,9 +278,23 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
           <span id="share-label">Dela</span>
         </button>
+        <button class="btn" id="install" type="button" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 8v6M9 11h6"/></svg>
+          Installera
+        </button>
         <p class="btn-note">Kalendern uppdateras automatiskt. Fungerar det inte? <a id="ics" href="/lunch.ics" download="lunch.ics">Ladda ner lunch.ics</a></p>
       </section>
     </main>
+
+    <dialog class="sheet" id="install-help" aria-labelledby="install-help-title">
+      <h2 id="install-help-title">Lägg till på hemskärmen</h2>
+      <ol>
+        <li>Tryck på dela-ikonen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg> i webbläsaren (ibland under <strong>⋯</strong>).</li>
+        <li>Välj <strong>Lägg till på hemskärmen</strong>.</li>
+        <li>Tryck <strong>Lägg till</strong>.</li>
+      </ol>
+      <form method="dialog"><button class="btn primary" type="submit">Okej</button></form>
+    </dialog>
 
     <footer>
       <p id="source-line" hidden>Källa: <a id="source" href="#" target="_blank" rel="noopener">skolans matsedel (PDF)</a></p>
@@ -511,6 +540,31 @@
       });
 
       // ---------- service worker ----------
+      // ---------- install ----------
+      // Chromium fires beforeinstallprompt; iOS has no install API, so show the steps instead.
+      var installBtn = document.getElementById('install');
+      var installHelp = document.getElementById('install-help');
+      var installPrompt = null;
+      var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIos && !standalone && installHelp.showModal) installBtn.hidden = false;
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        installPrompt = e;
+        installBtn.hidden = false;
+      });
+      window.addEventListener('appinstalled', function () { installBtn.hidden = true; });
+      installBtn.addEventListener('click', function () {
+        if (installPrompt) {
+          installPrompt.prompt();
+          installPrompt = null;
+          installBtn.hidden = true;
+        } else {
+          installHelp.showModal();
+        }
+      });
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
           navigator.serviceWorker.register('/sw.js').catch(function () {});

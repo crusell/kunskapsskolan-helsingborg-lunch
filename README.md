@@ -17,7 +17,7 @@ clear error and the previous menu stays in place.
 
 | Path | What |
 |---|---|
-| `/` | PWA showing today's and tomorrow's lunch (static files in `public/`) |
+| `/` | PWA showing today's and tomorrow's lunch (static files in `public/`). "Installera" button: native install prompt on Android/Chromium, step-by-step instructions on iOS (no install API there); hidden when already installed |
 | `/lunch.ics` | Calendar feed, one all-day event per school day |
 | `/menu.json` | Stored menu: `{ sourceUrl, sourceHash, updatedAt, days: { "YYYY-MM-DD": { dish, vegetarian, note } } }` |
 
