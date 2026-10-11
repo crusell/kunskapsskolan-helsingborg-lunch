@@ -6,8 +6,14 @@ Cloudflare Workers at <https://lunch.martincrusell.com>.
 The school publishes the menu as a PDF linked from
 [Praktisk information](https://www.kunskapsskolan.se/skolor/helsingborg/om-skolan/praktisk-information).
 A cron trigger checks that page twice a day. When the PDF link changes (and the file's
-SHA-256 differs from the stored one), the PDF is sent to Claude through Cloudflare AI Gateway,
-which returns the menu as structured JSON. The result is merged into KV.
+SHA-256 differs from the stored one), the PDF's text is sent to Claude Haiku through
+Cloudflare's OpenAI-compatible chat completions endpoint, which returns the menu as JSON.
+The result is validated with zod and merged into KV.
+
+That endpoint accepts text and images but not PDFs, so the Worker reads the PDF's text layer
+with `unpdf` and sends each line with its page position (`x,y: text`); the model uses the
+positions to untangle the two-column layout. A scanned PDF without a text layer fails with a
+clear error and the previous menu stays in place.
 
 | Path | What |
 |---|---|
@@ -24,10 +30,10 @@ npm install
 cp .dev.vars.example .dev.vars   # fill in AI_GATEWAY_URL and AI_GATEWAY_TOKEN
 ```
 
-- `AI_GATEWAY_URL` – `https://gateway.ai.cloudflare.com/v1/<account>/<gateway>` (`/anthropic` is appended if missing)
-- `AI_GATEWAY_TOKEN` – sent as `cf-aig-authorization: Bearer …`
-- `ANTHROPIC_API_KEY` – optional; leave out when the gateway holds the provider key
-- `MODEL` (in `wrangler.jsonc`) – defaults to `claude-haiku-5-5`
+- `AI_GATEWAY_URL` – OpenAI-style base URL, e.g. `https://api.cloudflare.com/client/v4/accounts/<account>/ai/v1`
+- `AI_GATEWAY_TOKEN` – Cloudflare token, sent as `Authorization: Bearer …`
+- `ANTHROPIC_API_KEY` – optional provider key, sent as `Authorization` instead
+- `MODEL` (in `wrangler.jsonc`) – `anthropic/claude-haiku-5.5` (note the dot; this endpoint's naming)
 
 ## Develop
 

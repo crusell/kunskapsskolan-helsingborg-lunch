@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
-import { gatewayBaseUrl, type ExtractedMenu } from "../src/extract";
+import { chatCompletionsUrl, parseMenuJson, pdfTextLayout, type ExtractedMenu } from "../src/extract";
 import { buildIcs } from "../src/ics";
 import { refresh, type Env } from "../src/index";
 import { findPdfUrl, isoWeekMonday, resolveWeekMonday, toDays, type StoredMenu } from "../src/menu";
@@ -97,14 +98,30 @@ describe("buildIcs", () => {
   });
 });
 
-describe("gatewayBaseUrl", () => {
-  it("appends the anthropic provider path once", () => {
-    expect(gatewayBaseUrl("https://gateway.ai.cloudflare.com/v1/acc/gw/")).toBe(
-      "https://gateway.ai.cloudflare.com/v1/acc/gw/anthropic",
-    );
-    expect(gatewayBaseUrl("https://gateway.ai.cloudflare.com/v1/acc/gw/anthropic")).toBe(
-      "https://gateway.ai.cloudflare.com/v1/acc/gw/anthropic",
-    );
+describe("gateway helpers", () => {
+  it("builds the OpenAI-compatible endpoint from any gateway URL form", () => {
+    const want = "https://gateway.ai.cloudflare.com/v1/acc/gw/compat/chat/completions";
+    for (const suffix of ["", "/", "/anthropic", "/compat", "/compat/chat/completions"]) {
+      expect(chatCompletionsUrl(`https://gateway.ai.cloudflare.com/v1/acc/gw${suffix}`)).toBe(want);
+    }
+    expect(chatCompletionsUrl("https://api.example.com/v1/")).toBe("https://api.example.com/v1/chat/completions");
+  });
+
+  it("parses fenced JSON and rejects the wrong shape", () => {
+    expect(parseMenuJson("```json\n" + JSON.stringify(extracted) + "\n```")).toEqual(extracted);
+    expect(() => parseMenuJson('{"weeks":[{"week":"42","days":[]}]}')).toThrow();
+  });
+});
+
+describe("pdfTextLayout", () => {
+  it("keeps the two columns of the real menu apart, with positions", async () => {
+    const file = readFileSync("test/matsedel-v42-45.pdf");
+    const layout = await pdfTextLayout(new Uint8Array(file).buffer);
+    const lines = layout.split("\n");
+    expect(lines).toContain("122,137: Vecka 42:");
+    expect(lines).toContain("402,137: Vecka 44:");
+    expect(lines).toContain("48,151: Måndag: Korv med potatismos, ketchup och lingon");
+    expect(lines).toContain("414,151: LOV");
   });
 });
 

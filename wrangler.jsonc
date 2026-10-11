@@ -10,7 +10,7 @@
   "triggers": { "crons": ["0 4,10 * * *"] },
   "kv_namespaces": [{ "binding": "MENU", "id": "b3c3b70dc4024ba5afc71cfd6c587295" }],
   "vars": {
-    "MODEL": "claude-haiku-5-5",
+    "MODEL": "anthropic/claude-haiku-5.5",
     "SOURCE_URL": "https://www.kunskapsskolan.se/skolor/helsingborg/om-skolan/praktisk-information"
   },
   "observability": { "enabled": true }

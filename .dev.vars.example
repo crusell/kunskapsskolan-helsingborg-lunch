@@ -1,11 +1,12 @@
 # Copy to .dev.vars (gitignored). Used by `wrangler dev`; push to prod with `npm run secrets`.
 
-# Cloudflare AI Gateway URL, with or without the trailing /anthropic
-# e.g. https://gateway.ai.cloudflare.com/v1/<account_id>/<gateway_id>/anthropic
+# OpenAI-compatible base URL of the Cloudflare AI endpoint; /chat/completions is appended.
+# e.g. https://api.cloudflare.com/client/v4/accounts/<account_id>/ai/v1
+# A https://gateway.ai.cloudflare.com/v1/<account_id>/<gateway_id> URL also works (/compat is added).
 AI_GATEWAY_URL=
 
-# AI Gateway token (sent as cf-aig-authorization: Bearer ...)
+# Cloudflare token, sent as Authorization: Bearer and cf-aig-authorization: Bearer
 AI_GATEWAY_TOKEN=
 
-# Optional: only if the gateway does not hold the Anthropic key itself (BYOK / unified billing)
+# Optional: provider key to send as Authorization instead of the token above
 #ANTHROPIC_API_KEY=
