@@ -13,11 +13,11 @@ serves `/lunch.ics`, `/menu.json` and a PWA (`public/`) showing today's and tomo
 - Routes smoke-tested locally with seeded KV.
 - PWA in `public/` designed by a Fable subagent.
 - Not deployed. Pushed to https://github.com/crusell/kunskapsskolan-helsingborg-lunch (`main`).
-- The Claude call through the gateway has never run for real: `.dev.vars` is still empty.
+- Real run reaches the gateway but gets `401 {"code":10000,"message":"Authentication error"}`. No successful extraction yet.
 
 ## Next steps
 
-1. User pastes `AI_GATEWAY_URL` + `AI_GATEWAY_TOKEN` into `.dev.vars`.
+1. Fix gateway 401 (see blockers).
 2. `npm run dev`, hit `/__scheduled?cron=0+4+*+*+*`, check `/menu.json` against the PDF
    (v.42-45: week 44 is LOV, Thursday week 42 is EJ MAT, week 45 is a country theme week).
 3. `npm run secrets && npm run deploy`.
@@ -25,6 +25,6 @@ serves `/lunch.ics`, `/menu.json` and a PWA (`public/`) showing today's and tomo
 
 ## Open blockers
 
-- Gateway credentials (see above).
+- Gateway returns 401 with the values in `.dev.vars`: check URL shape (`https://gateway.ai.cloudflare.com/v1/<account>/<gateway>`) and that the token has AI Gateway Run permission.
 - Unknown whether the gateway holds the Anthropic key (BYOK/unified billing). If not, set
   `ANTHROPIC_API_KEY` too.

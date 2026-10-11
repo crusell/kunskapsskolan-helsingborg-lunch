@@ -22,7 +22,8 @@ const USER_AGENT = "Mozilla/5.0 (compatible; matsedel-ks; +https://lunch.martinc
  */
 export async function refresh(
   env: Env,
-  deps: Deps = { fetch, extract: extractMenu, now: () => new Date() },
+  // fetch is wrapped: calling it as deps.fetch() would give it the wrong `this` in workerd
+  deps: Deps = { fetch: (input, init) => fetch(input, init), extract: extractMenu, now: () => new Date() },
 ): Promise<StoredMenu> {
   const stored = await env.MENU.get<StoredMenu>(KEY, "json");
 

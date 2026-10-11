@@ -47,7 +47,7 @@ npm run secrets      # uploads .dev.vars as Worker secrets
 npm run deploy
 ```
 
-The KV namespace is created by wrangler on first deploy. The zone `martincrusell.com` must be
+The KV namespace (`matsedel-ks-menu`) id is set in `wrangler.jsonc`. The zone `martincrusell.com` must be
 in the same Cloudflare account for the custom domain route.
 
 To force a re-analysis of the current PDF, delete the `menu` key in the `MENU` namespace
