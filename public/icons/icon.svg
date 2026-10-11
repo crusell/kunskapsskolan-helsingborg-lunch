@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="0" fill="#4f9a2e"/>
+  <!-- pod -->
+  <path d="M96 300c0-86 70-156 160-156 72 0 130 36 160 96 6 12 4 24-8 30-38 20-78 30-152 30-74 0-114 0-152 0H96z" fill="#2f6a1a"/>
+  <path d="M104 300c0 72 68 120 152 120s152-48 152-120H104z" fill="#3d8224"/>
+  <!-- peas -->
+  <circle cx="176" cy="268" r="46" fill="#a7e67a"/>
+  <circle cx="256" cy="268" r="46" fill="#a7e67a"/>
+  <circle cx="336" cy="268" r="46" fill="#a7e67a"/>
+  <circle cx="162" cy="254" r="14" fill="#dbf7c4"/>
+  <circle cx="242" cy="254" r="14" fill="#dbf7c4"/>
+  <circle cx="322" cy="254" r="14" fill="#dbf7c4"/>
+</svg>

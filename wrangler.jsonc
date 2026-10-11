@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "matsedel-ks",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  // public/ holds the PWA; the Worker only answers /lunch.ics and /menu.json
+  "assets": { "directory": "./public" },
+  "routes": [{ "pattern": "lunch.martincrusell.com", "custom_domain": true }],
+  // 04:00 and 10:00 UTC; Claude is only called when the PDF link has changed
+  "triggers": { "crons": ["0 4,10 * * *"] },
+  // No id: wrangler creates the namespace on first deploy
+  "kv_namespaces": [{ "binding": "MENU" }],
+  "vars": {
+    "MODEL": "claude-haiku-5-5",
+    "SOURCE_URL": "https://www.kunskapsskolan.se/skolor/helsingborg/om-skolan/praktisk-information"
+  },
+  "observability": { "enabled": true }
+}

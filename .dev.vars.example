@@ -1,0 +1,11 @@
+# Copy to .dev.vars (gitignored). Used by `wrangler dev`; push to prod with `npm run secrets`.
+
+# Cloudflare AI Gateway URL, with or without the trailing /anthropic
+# e.g. https://gateway.ai.cloudflare.com/v1/<account_id>/<gateway_id>/anthropic
+AI_GATEWAY_URL=
+
+# AI Gateway token (sent as cf-aig-authorization: Bearer ...)
+AI_GATEWAY_TOKEN=
+
+# Optional: only if the gateway does not hold the Anthropic key itself (BYOK / unified billing)
+#ANTHROPIC_API_KEY=

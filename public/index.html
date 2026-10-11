@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lunch – Kunskapsskolan Helsingborg</title>
+  <meta name="description" content="Dagens och morgondagens lunch från Restaurang Ärtan på Kunskapsskolan Helsingborg.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#4f9a2e" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#10170d" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lunch">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <style>
+    :root {
+      --pea: #4f9a2e;
+      --pea-deep: #2f6a1a;
+      --pea-light: #a7e67a;
+      --paper: #f1f4ea;
+      --ink: #182012;
+      --ink-soft: #4d5a44;
+      --rule: #cbd6bf;
+      --butter: #f5cb5c;
+      --on-pea: #f6fbef;
+      --on-pea-soft: #d6efc3;
+      --hero-bg: var(--pea);
+      --hero-ink: var(--on-pea);
+      --hero-soft: var(--on-pea-soft);
+      --focus: #1e4e9a;
+      --font: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #10170d;
+        --ink: #e9eedf;
+        --ink-soft: #a9b59c;
+        --rule: #2c3a25;
+        --pea: #9adf6a;
+        --pea-deep: #7cc84a;
+        --hero-bg: #9adf6a;
+        --hero-ink: #10170d;
+        --hero-soft: #2d4a1c;
+        --focus: #ffd866;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.4;
+      min-height: 100dvh;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+    [hidden] { display: none !important; }
+
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+    /* Brand row */
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 0 14px;
+    }
+    .brand svg { width: 44px; height: 44px; flex: none; }
+    .brand p { margin: 0; font-size: 0.95rem; line-height: 1.25; color: var(--ink-soft); }
+    .brand strong { display: block; color: var(--ink); font-weight: 700; font-size: 1.05rem; }
+    .pea { transform-origin: center; }
+    @media (prefers-reduced-motion: no-preference) {
+      .pea { animation: pop .5s cubic-bezier(.2, 1.4, .4, 1) both; }
+      .pea:nth-child(2) { animation-delay: .08s; }
+      .pea:nth-child(3) { animation-delay: .16s; }
+      @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+    }
+
+    /* Status / notices */
+    .notice {
+      margin: 0 0 16px;
+      padding: 12px 16px;
+      border: 2px solid var(--rule);
+      border-radius: 14px;
+      font-size: 0.95rem;
+    }
+    .notice p { margin: 0; }
+    .notice button { margin-top: 10px; }
+
+    /* Day blocks */
+    .day { padding: 24px 0 26px; }
+    .day h2, .day .h {
+      margin: 0 0 2px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .day .date { margin: 0 0 14px; font-size: 1rem; color: var(--ink-soft); }
+    .day .dish {
+      margin: 0;
+      font-size: clamp(1.7rem, 2.4vw + 1rem, 2.5rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.015em;
+      text-wrap: balance;
+      max-width: 22ch;
+    }
+    .day .dish.quiet { font-size: clamp(1.35rem, 1.5vw + 0.8rem, 1.9rem); font-weight: 700; }
+    .day .veg {
+      display: flex; align-items: flex-start; gap: 8px;
+      margin: 14px 0 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      max-width: 34ch;
+    }
+    .day .veg svg { width: 20px; height: 20px; flex: none; margin-top: 2px; }
+    .day .hint { margin: 14px 0 0; font-size: 0.95rem; color: var(--ink-soft); }
+    .tag {
+      display: inline-block;
+      margin: 0 0 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--butter);
+      color: #2a2309;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Today: the green slab */
+    .hero {
+      background: var(--hero-bg);
+      color: var(--hero-ink);
+      border-radius: 28px;
+      padding: 24px 24px 28px;
+      margin: 4px 0 8px;
+    }
+    .hero .date, .hero .veg, .hero .hint { color: var(--hero-soft); }
+    .hero .dish { font-size: clamp(2rem, 3.2vw + 1rem, 3.4rem); }
+    .hero .tag { background: var(--on-pea); color: var(--pea-deep); }
+    @media (prefers-color-scheme: dark) {
+      .hero .tag { background: #10170d; color: #9adf6a; }
+    }
+
+    .grid { display: flex; flex-direction: column; }
+    .hero { order: -1; }
+    .tomorrow { border-bottom: 2px solid var(--rule); padding-left: 24px; padding-right: 24px; }
+
+    /* Skeleton */
+    .skel { border-radius: 8px; background: currentColor; opacity: .18; height: 1em; }
+    @media (prefers-reduced-motion: no-preference) {
+      .skel { animation: pulse 1.4s ease-in-out infinite; }
+      @keyframes pulse { 50% { opacity: .08; } }
+    }
+
+    /* Coming days */
+    .coming { padding: 22px 24px 8px; }
+    .coming h2 { margin: 0 0 8px; font-size: 1rem; font-weight: 700; }
+    .coming ol { list-style: none; margin: 0; padding: 0; }
+    .coming li {
+      display: grid;
+      grid-template-columns: 3.6rem 1fr;
+      gap: 2px 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+      align-items: start;
+    }
+    .coming .wd { grid-row: span 3; }
+    .coming .wd { font-weight: 700; }
+    .coming .wd small { display: block; font-weight: 500; color: var(--ink-soft); font-size: .85rem; }
+    .coming .d { font-weight: 600; font-size: 1.05rem; line-height: 1.25; }
+    .coming .v { grid-column: 2; color: var(--ink-soft); font-size: .95rem; }
+    .coming .n { grid-column: 2; font-size: .85rem; font-weight: 700; color: var(--pea-deep); }
+    .coming .none { color: var(--ink-soft); font-weight: 500; }
+
+    /* Actions */
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; padding: 22px 24px 8px; }
+    .btn {
+      appearance: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      font: inherit; font-weight: 700; font-size: 0.95rem;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 2px solid var(--pea);
+      background: transparent;
+      color: var(--ink);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn.primary { background: var(--pea); color: var(--on-pea); }
+    @media (prefers-color-scheme: dark) { .btn.primary { color: #10170d; } }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-note { width: 100%; margin: 0; font-size: .85rem; color: var(--ink-soft); }
+    .btn-note a { color: inherit; }
+
+    footer {
+      padding: 28px 24px 36px;
+      font-size: .85rem;
+      color: var(--ink-soft);
+    }
+    footer p { margin: 0 0 4px; }
+
+    /* Desktop: today and tomorrow side by side */
+    @media (min-width: 760px) {
+      .brand { padding-top: 28px; }
+      .grid { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; align-items: stretch; }
+      .hero { margin: 0; padding: 32px 32px 36px; }
+      .tomorrow { border: 2px solid var(--rule); border-radius: 28px; padding: 32px; }
+      .coming, .actions, footer { padding-left: 8px; padding-right: 8px; }
+      .coming ol { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+    }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="brand">
+      <svg viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+        <path d="M96 300c0-86 70-156 160-156 72 0 130 36 160 96 6 12 4 24-8 30-38 20-78 30-152 30-74 0-114 0-152 0H96z" fill="#2f6a1a"/>
+        <path d="M104 300c0 72 68 120 152 120s152-48 152-120H104z" fill="#3d8224"/>
+        <g>
+          <circle class="pea" cx="176" cy="268" r="46" fill="#a7e67a"/>
+          <circle class="pea" cx="256" cy="268" r="46" fill="#a7e67a"/>
+          <circle class="pea" cx="336" cy="268" r="46" fill="#a7e67a"/>
+        </g>
+      </svg>
+      <p><strong>Restaurang Ärtan</strong>Lunch på Kunskapsskolan Helsingborg</p>
+    </header>
+
+    <main>
+      <div id="notice" class="notice" role="status" hidden></div>
+
+      <div class="grid" id="days">
+        <section class="day hero" id="today" aria-labelledby="today-h">
+          <h2 id="today-h">Idag</h2>
+          <p class="date"><span class="skel" style="width:9rem;display:inline-block"></span></p>
+          <p class="dish"><span class="skel" style="width:100%;display:block"></span><span class="skel" style="width:70%;display:block;margin-top:.3em"></span></p>
+        </section>
+
+        <section class="day tomorrow" id="tomorrow" aria-labelledby="tomorrow-h">
+          <h2 id="tomorrow-h">Imorgon</h2>
+          <p class="date"><span class="skel" style="width:8rem;display:inline-block"></span></p>
+          <p class="dish"><span class="skel" style="width:90%;display:block"></span></p>
+        </section>
+      </div>
+
+      <section class="coming" id="coming" hidden aria-labelledby="coming-h">
+        <h2 id="coming-h">Kommande dagar</h2>
+        <ol id="coming-list"></ol>
+      </section>
+
+      <section class="actions" aria-label="Kalender och delning">
+        <a class="btn primary" id="webcal" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>
+          Lägg till i kalendern
+        </a>
+        <button class="btn" id="share" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+          <span id="share-label">Dela</span>
+        </button>
+        <p class="btn-note">Kalendern uppdateras automatiskt. Fungerar det inte? <a id="ics" href="/lunch.ics" download="lunch.ics">Ladda ner lunch.ics</a></p>
+      </section>
+    </main>
+
+    <footer>
+      <p id="source-line" hidden>Källa: <a id="source" href="#" target="_blank" rel="noopener">skolans matsedel (PDF)</a></p>
+      <p id="updated" hidden></p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      var TZ = 'Europe/Stockholm';
+      var DAY = 86400000;
+
+      // ---------- dates ----------
+      function partsInTZ(date) {
+        var parts = new Intl.DateTimeFormat('en-GB', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hour12: false }).formatToParts(date);
+        var o = {};
+        parts.forEach(function (p) { o[p.type] = p.value; });
+        return { iso: o.year + '-' + o.month + '-' + o.day, hour: parseInt(o.hour, 10) % 24 };
+      }
+      function addDays(iso, n) {
+        var d = new Date(iso + 'T00:00:00Z');
+        return new Date(d.getTime() + n * DAY).toISOString().slice(0, 10);
+      }
+      function fmt(iso, opts) {
+        opts.timeZone = 'UTC';
+        return new Intl.DateTimeFormat('sv-SE', opts).format(new Date(iso + 'T00:00:00Z'));
+      }
+      function longDate(iso) { return cap(fmt(iso, { weekday: 'long', day: 'numeric', month: 'long' })); }
+      function weekdayShort(iso) { return cap(fmt(iso, { weekday: 'short' })).replace('.', ''); }
+      function dayMonth(iso) { return fmt(iso, { day: 'numeric', month: 'short' }).replace('.', ''); }
+      function isWeekend(iso) { var d = new Date(iso + 'T00:00:00Z').getUTCDay(); return d === 0 || d === 6; }
+      function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+      // ---------- DOM helpers (textContent only) ----------
+      function el(tag, cls, text) {
+        var e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (text != null) e.textContent = text;
+        return e;
+      }
+      function leaf() {
+        var ns = 'http://www.w3.org/2000/svg';
+        var s = document.createElementNS(ns, 'svg');
+        s.setAttribute('viewBox', '0 0 24 24');
+        s.setAttribute('aria-hidden', 'true');
+        var p = document.createElementNS(ns, 'path');
+        p.setAttribute('d', 'M5 20c0-9 5-15 15-16-1 10-6 15-15 16zm0 0c3-5 6-8 10-11');
+        p.setAttribute('fill', 'none');
+        p.setAttribute('stroke', 'currentColor');
+        p.setAttribute('stroke-width', '2.2');
+        p.setAttribute('stroke-linecap', 'round');
+        p.setAttribute('stroke-linejoin', 'round');
+        s.appendChild(p);
+        return s;
+      }
+      function clearAfterHeading(section) {
+        while (section.children.length > 1) section.removeChild(section.lastChild);
+      }
+
+      // ---------- rendering ----------
+      function renderDay(section, heading, iso, entry, extra) {
+        clearAfterHeading(section);
+        section.querySelector('h2').textContent = heading;
+        section.appendChild(el('p', 'date', iso ? longDate(iso) : ''));
+        if (entry && entry.note && entry.dish) section.appendChild(el('span', 'tag', entry.note));
+
+        if (!iso) {
+          section.appendChild(el('p', 'dish quiet', 'Ingen lunch planerad'));
+          return;
+        }
+        if (!entry) {
+          section.appendChild(el('p', 'dish quiet', isWeekend(iso) ? 'Helg – ingen skollunch' : 'Ingen lunch i matsedeln'));
+          section.appendChild(el('p', 'hint', isWeekend(iso) ? 'Restaurang Ärtan har stängt. Vi ses i skolan!' : 'Troligen lov, eller så är matsedeln inte publicerad än.'));
+          return;
+        }
+        if (!entry.dish) {
+          section.appendChild(el('p', 'dish quiet', 'Ingen lunch serveras'));
+          if (entry.note) section.appendChild(el('p', 'hint', entry.note));
+          return;
+        }
+        section.appendChild(el('p', 'dish', entry.dish));
+        if (entry.vegetarian) {
+          var v = el('p', 'veg');
+          v.appendChild(leaf());
+          v.appendChild(el('span', null, 'Vegetariskt: ' + entry.vegetarian));
+          section.appendChild(v);
+        }
+        if (extra) section.appendChild(el('p', 'hint', extra));
+      }
+
+      function renderComing(dates, days) {
+        var list = document.getElementById('coming-list');
+        var sec = document.getElementById('coming');
+        list.textContent = '';
+        if (!dates.length) { sec.hidden = true; return; }
+        dates.forEach(function (iso) {
+          var e = days[iso];
+          var li = el('li');
+          var wd = el('span', 'wd', weekdayShort(iso));
+          wd.appendChild(el('small', null, dayMonth(iso)));
+          li.appendChild(wd);
+          if (e.dish) {
+            li.appendChild(el('span', 'd', e.dish));
+            if (e.vegetarian) li.appendChild(el('span', 'v', 'Vegetariskt: ' + e.vegetarian));
+            if (e.note) li.appendChild(el('span', 'n', e.note));
+          } else {
+            li.appendChild(el('span', 'd none', 'Ingen lunch' + (e.note ? ' – ' + e.note : '')));
+          }
+          list.appendChild(li);
+        });
+        sec.hidden = false;
+      }
+
+      function render(data) {
+        var days = data.days || {};
+        document.getElementById('days').hidden = false;
+        var now = partsInTZ(new Date());
+        // ?d=YYYY-MM-DD&h=HH lets you preview another day (handy for testing)
+        var q = new URLSearchParams(location.search);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(q.get('d') || '')) now.iso = q.get('d');
+        if (/^\d{1,2}$/.test(q.get('h') || '')) now.hour = parseInt(q.get('h'), 10);
+        var today = now.iso;
+        var tomorrow = addDays(today, 1);
+        var sorted = Object.keys(days).sort();
+
+        var todayHint = null;
+        if (days[today] && days[today].dish && now.hour >= 14) todayHint = 'Lunchen är över för idag.';
+        renderDay(document.getElementById('today'), 'Idag', today, days[today], todayHint);
+
+        // Second slot: tomorrow if it has data, otherwise the next day that does
+        var second = tomorrow, secondLabel = 'Imorgon';
+        if (!days[tomorrow]) {
+          var next = sorted.filter(function (d) { return d > tomorrow; })[0];
+          if (next) { second = next; secondLabel = 'Nästa lunch'; }
+        }
+        renderDay(document.getElementById('tomorrow'), secondLabel, second, days[second]);
+
+        // The green slab goes to the next lunch actually being served
+        var todayServes = !!(days[today] && days[today].dish);
+        document.getElementById('today').className = 'day ' + (todayServes ? 'hero' : 'tomorrow');
+        document.getElementById('tomorrow').className = 'day ' + (todayServes ? 'tomorrow' : 'hero');
+
+        // Coming days: up to the next 5 known days after the second slot
+        var coming = sorted.filter(function (d) { return d > second; }).slice(0, 5);
+        renderComing(coming, days);
+
+        if (data.sourceUrl) {
+          var src = document.getElementById('source');
+          src.href = data.sourceUrl;
+          document.getElementById('source-line').hidden = false;
+        }
+        if (data.updatedAt) {
+          var u = new Date(data.updatedAt);
+          if (!isNaN(u)) {
+            document.getElementById('updated').textContent = 'Uppdaterad ' +
+              new Intl.DateTimeFormat('sv-SE', { timeZone: TZ, day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }).format(u);
+            document.getElementById('updated').hidden = false;
+          }
+        }
+      }
+
+      // ---------- notices ----------
+      var notice = document.getElementById('notice');
+      function showNotice(text, retry) {
+        notice.textContent = '';
+        notice.appendChild(el('p', null, text));
+        if (retry) {
+          var b = el('button', 'btn', 'Försök igen');
+          b.type = 'button';
+          b.addEventListener('click', load);
+          notice.appendChild(b);
+        }
+        notice.hidden = false;
+      }
+      function hideNotice() { notice.hidden = true; }
+
+      function showEmptyDays() {
+        document.getElementById('days').hidden = true;
+        document.getElementById('coming').hidden = true;
+      }
+
+      // ---------- loading ----------
+      var lastData = null;
+      function load() {
+        hideNotice();
+        fetch('/menu.json', { cache: 'no-store' })
+          .then(function (res) {
+            if (res.status === 503) {
+              return res.json().catch(function () { return {}; }).then(function () {
+                if (!lastData) showEmptyDays();
+                showNotice('Matsedeln är inte laddad än. Prova igen om en liten stund.', true);
+              });
+            }
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            var fromCache = res.headers.get('X-From-Cache') === '1';
+            return res.json().then(function (data) {
+              lastData = data;
+              render(data);
+              if (fromCache || !navigator.onLine) {
+                showNotice('Du verkar vara offline. Det här är den senast sparade matsedeln.', false);
+              }
+            });
+          })
+          .catch(function () {
+            if (!lastData) showEmptyDays();
+            showNotice(navigator.onLine
+              ? 'Det gick inte att hämta matsedeln just nu. Försök igen om en stund.'
+              : 'Du är offline och det finns ingen sparad matsedel än. Koppla upp dig och försök igen.', true);
+          });
+      }
+
+      window.addEventListener('online', load);
+      window.addEventListener('offline', function () {
+        if (lastData) showNotice('Du är offline. Det här är den senast sparade matsedeln.', false);
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible' && lastData) {
+          // Re-render in case the day has changed while the app was in the background
+          render(lastData);
+          load();
+        }
+      });
+
+      // ---------- calendar + share ----------
+      document.getElementById('webcal').href = 'webcal://' + location.host + '/lunch.ics';
+
+      var shareBtn = document.getElementById('share');
+      var shareLabel = document.getElementById('share-label');
+      var shareUrl = location.origin + '/';
+      shareBtn.addEventListener('click', function () {
+        var payload = { title: 'Lunch – Kunskapsskolan Helsingborg', text: 'Kolla vad det är för lunch på Ärtan', url: shareUrl };
+        if (navigator.share) {
+          navigator.share(payload).catch(function () {});
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareUrl).then(function () {
+            shareLabel.textContent = 'Länk kopierad';
+            setTimeout(function () { shareLabel.textContent = 'Dela'; }, 2000);
+          });
+        } else {
+          window.prompt('Kopiera länken:', shareUrl);
+        }
+      });
+
+      // ---------- service worker ----------
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+      }
+
+      load();
+    })();
+  </script>
+</body>
+</html>
