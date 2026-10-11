@@ -16,13 +16,14 @@ serves `/lunch.ics`, `/menu.json` and a PWA (`public/`) showing today's and tomo
 - 14 vitest tests pass, typecheck clean.
 - KV namespace `matsedel-ks-menu` created, id in `wrangler.jsonc`.
 - PWA in `public/` designed by a Fable subagent.
-- Pushed to https://github.com/crusell/kunskapsskolan-helsingborg-lunch (`main`). Not deployed.
+- Pushed to https://github.com/crusell/kunskapsskolan-helsingborg-lunch (`main`).
+- Deployed 2026-10-11 to https://lunch.martincrusell.com (custom domain, cron, secrets set).
+  Production extraction ran fine: 15 days in KV, `/lunch.ics` has 15 events.
 
 ## Next steps
 
-1. `npm run secrets && npm run deploy`.
-2. On the live site: check service worker offline reload, install prompt, `webcal://` on iOS
-   (not verified locally).
+1. On a phone: check service worker offline reload, install prompt, `webcal://` on iOS.
+2. Watch the next menu change (after week 45) to confirm the cron picks it up.
 
 ## Open blockers
 
