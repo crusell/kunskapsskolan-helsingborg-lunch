@@ -15,7 +15,8 @@ serves `/lunch.ics`, `/menu.json` and a PWA (`public/`) showing today's and tomo
   `anthropic/claude-haiku-5.5`. No PDF input there, so PDF text + positions is sent (`unpdf`).
 - 14 vitest tests pass, typecheck clean.
 - KV namespace `matsedel-ks-menu` created, id in `wrangler.jsonc`.
-- PWA in `public/` designed by a Fable subagent.
+- PWA in `public/` designed by a Fable subagent. Has an "Installera" button (native prompt on
+  Chromium, instruction sheet on iOS). User confirmed the live site works.
 - Pushed to https://github.com/crusell/kunskapsskolan-helsingborg-lunch (`main`).
 - Deployed 2026-10-11 to https://lunch.martincrusell.com (custom domain, cron, secrets set).
   Production extraction ran fine: 15 days in KV, `/lunch.ics` has 15 events.
